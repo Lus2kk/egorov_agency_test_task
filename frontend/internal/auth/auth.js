@@ -1,4 +1,4 @@
-var BACKEND_URL = 'http://localhost:8060';
+var BACKEND_URL = (location.port === '5173') ? 'http://localhost:8060' : '';
 
 var user = null;
 

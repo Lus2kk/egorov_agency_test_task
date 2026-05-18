@@ -1,4 +1,4 @@
-var BACKEND_URL = 'http://localhost:8060';
+var BACKEND_URL = (location.port === '5173') ? 'http://localhost:8060' : '';
 
 var symbolMap = {
   BTC: { name: 'Bitcoin', img: '/images/bitcoin.png' },
@@ -104,8 +104,8 @@ var renderSubscriptions = function () {
   } else {
     subscriptions.forEach(function (sub, i) {
       html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.1);">';
-      html += '<span>' + (sub.from_symbol || sub.stream_id) + ' → ' + (sub.to_symbol || 'USD') + '</span>';
-      html += '<button class="delete-sub-btn" data-stream-id="' + sub.stream_id + '" style="background:#f87171;border:none;color:white;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:12px;">✕</button>';
+      html += '<span>' + (sub.from_symbol || sub.stream_id) + ' \u2192 ' + (sub.to_symbol || 'USD') + '</span>';
+      html += '<button class="delete-sub-btn" data-stream-id="' + sub.stream_id + '" style="background:#f87171;border:none;color:white;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:12px;">\u2715</button>';
       html += '</div>';
     });
   }
@@ -145,7 +145,8 @@ var deleteSubscription = function (streamId) {
 
 var connectWebSocket = function () {
   var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  var wsUrl = protocol + '//' + BACKEND_URL.replace(/^https?:\/\//, '') + '/crypto/ws?symbols=' + defaultSymbols.join(',');
+  var host = BACKEND_URL ? BACKEND_URL.replace(/^https?:\/\//, '') : window.location.host;
+  var wsUrl = protocol + '//' + host + '/crypto/ws?symbols=' + defaultSymbols.join(',');
   var ws = null;
   var reconnectDelay = 3000;
 
@@ -205,11 +206,10 @@ var initCrypto = function () {
 
   var addBtn = document.querySelector('.crypto_add_btn');
   if (addBtn) {
-    var origClick = addBtn.onclick;
     addBtn.addEventListener('click', function (e) {
       var container = document.getElementById('subscriptions_container');
       if (container) {
-        container.style.display = container.style.display === 'none' ? 'block' : 'block';
+        container.style.display = 'block';
         fetchSubscriptions();
       }
     });
