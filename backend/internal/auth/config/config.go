@@ -7,12 +7,15 @@ import (
 )
 
 type Config struct {
-	ServerAddress     string `env:"SERVER_ADDRESS"`
-    ClientID          string `env:"GOOGLE_CLIENT_ID" `
-    ClientSecret      string `env:"GOOGLE_CLIENT_SECRET" `
-    GoogleRedirectURL string `env:"GOOGLE_REDIRECT_URL"`
-    FrontendURL       string `env:"FRONTEND_URL"`
-    GoogleUserInfoURL string `env:"GOOGLE_USER_INFO_URL"`
+	ServerAddress        string `env:"SERVER_ADDRESS"`
+	ClientID             string `env:"GOOGLE_CLIENT_ID"`
+	ClientSecret         string `env:"GOOGLE_CLIENT_SECRET"`
+	GoogleRedirectURL    string `env:"GOOGLE_REDIRECT_URL"`
+	FrontendURL          string `env:"FRONTEND_URL"`
+	GoogleUserInfoURL    string `env:"GOOGLE_USER_INFO_URL"`
+	CoinDeskAPIKey       string `env:"COINDESK_API_KEY"`
+	CoinDeskDataAPIURL   string `env:"COINDESK_DATA_API_URL" env-default:"https://data-api.coindesk.com"`
+	CoinDeskMinAPIURL    string `env:"COINDESK_MIN_API_URL" env-default:"https://min-api.cryptocompare.com"`
 }
 
 

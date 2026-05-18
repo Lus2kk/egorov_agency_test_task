@@ -1,0 +1,232 @@
+.crypto_modal_overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Bruno Ace', sans-serif;
+}
+
+.crypto_modal_overlay.open {
+  display: flex;
+}
+
+.crypto_modal {
+  background: rgba(3, 28, 65, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.crypto_modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.crypto_modal_header h2 {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.crypto_modal_close {
+  background: transparent;
+  border: 1px solid rgba(255, 255,  255, 0.3);
+  border-radius: 4px;
+  color: white;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: border-color 0.2s;
+}
+
+.crypto_modal_close:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.crypto_search {
+  width: calc(100% - 48px);
+  margin: 16px 24px 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.crypto_search::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.crypto_search:focus {
+  border-color: rgba(184, 150, 12, 1);
+}
+
+.crypto_modal_list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 24px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.crypto_modal_list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.crypto_modal_list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.crypto_modal_list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.crypto_coin_item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.crypto_coin_item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.crypto_coin_item--existing {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.crypto_coin_item--added {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.crypto_coin_item_icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.crypto_coin_item_info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.crypto_coin_item_name {
+  font-size: 14px;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crypto_coin_item_symbol {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.crypto_coin_item_price_info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.crypto_coin_item_price {
+  font-size: 14px;
+  color: white;
+  font-weight: 500;
+}
+
+.crypto_coin_item_change {
+  font-size: 12px;
+}
+
+.crypto_loading {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 40px;
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 14px;
+}
+
+.crypto_coin--dynamic {
+  position: relative;
+}
+
+.crypto_coin_delete {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.9);
+  border: none;
+  color: white;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.crypto_coin_delete:hover {
+  background: rgba(220, 38, 38, 1);
+}
+
+@media (max-width: 768px) {
+  .crypto_modal {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .crypto_modal_header h2 {
+    font-size: 16px;
+  }
+
+  .crypto_search {
+    font-size: 13px;
+  }
+}
