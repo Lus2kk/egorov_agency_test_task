@@ -1,0 +1,472 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  height: 104px;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 35px 80px;
+  background: transparent;
+}
+
+.header img {
+  width: 173px;
+  height: 34px;
+}
+
+.menu_buttons ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.menu_buttons li a {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  padding: 0 24px;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.hero_section {
+  position: relative;
+  width: 100%;
+  height: 1000px;
+  overflow: hidden;
+}
+
+video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero_section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.registration_frame {
+  position: absolute;
+  top: 254px;
+  left: 80px;
+  right: 80px;
+  height: 546px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+.info_frame {
+  display: flex;
+  flex-direction: column;
+  gap: 37px;
+  width: 550px;
+  height: 546px;
+}
+
+.text_frame {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.text_frame h1 {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: clamp(36px, 4vw, 72px);
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: white;
+}
+
+.text_frame p {
+  font-family: 'Bruno Ace', sans-serif;
+  width: 1000px;
+height: 66;
+angle: 0 deg;
+opacity: 1;
+
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  color: white;
+}
+
+
+.button_frame {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+}
+
+.learn_more_btn,
+.play_video_btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 207px;
+  height: 55px;
+  border-radius: 5px;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.learn_more_btn {
+  background: white;
+  border: none;
+}
+
+.play_video_btn {
+  background: transparent;
+  border: 1px solid white;
+}
+
+.learn_more_btn p {
+  flex: 1;
+  padding-left: 20px;
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  color: rgba(39, 0, 91, 1);
+  white-space: nowrap;
+}
+
+.play_video_btn p {
+  flex: 1;
+  padding-left: 20px;
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  color: white;
+  white-space: nowrap;
+}
+
+.btn_icon_block {
+  position: relative;
+  width: 71px;
+  height: 55px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_icon_block img:first-child {
+  position: absolute;
+  width: 71px;
+  height: 55px;
+}
+
+.btn_icon_block img:last-child {
+  position: relative;
+  z-index: 1;
+  width: 16px;
+}
+
+.auth_frame {
+  width: 425px;
+  height: 455px;
+  border-radius: 10px;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+
+.auth_card_stripe {
+  width: 100%;
+  background: rgba(39, 0, 91, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0 0;
+  gap: 16px;
+  border-radius: auto;
+}
+
+.banking_paragraph {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-align: center;
+  color: white;
+}
+
+.auth_buttons_frame {
+  display: flex;
+  width: 100%;
+  height: 47px;
+}
+
+.sign_in_button_frame,
+.email_button_frame {
+  flex: 1;
+}
+
+.sign_in_button_frame button {
+  width: 100%;
+  height: 100%;
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background: white;
+  color: rgba(39, 0, 91, 1);
+  border-radius: 10px 0 0 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.email_button_frame button {
+  width: 100%;
+  height: 100%;
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background: rgba(39, 0, 91, 1);
+  color: white;
+border-radius: 10px 10px 0px 0px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sign_in_button_frame button {
+  border-radius: 10px 10px 0px 0px;
+}
+.email_button_frame button {
+     border-radius: 10px 10px 0px 0px;
+}
+
+
+.auth_card_body {
+  flex: 1;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 0 40px;
+}
+
+.google_auth_main_frame {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.google_button_frame {
+  width: 100%;
+  height: 48px;
+  background: rgba(189, 171, 110, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  border: none;
+}
+
+.google_button_frame img {
+  width: 24px;
+  height: 24px;
+}
+
+.google_button_frame p {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  color: white;
+}
+
+.start_trial_journey_text {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 14px;
+  color: rgba(39, 0, 91, 1);
+  text-align: center;
+}
+
+.or_frame {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.or_line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.or_frame p {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.create_account_frame {
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  border: 1px solid rgba(184, 150, 12, 1);
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  color: rgba(184, 150, 12, 1);
+  cursor: pointer;
+}
+
+/* ============================================
+   CRYPTO SECTION
+   ============================================ */
+.crypto_section {
+  position: relative;
+  width: 100%;
+  min-height: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px;
+  background: #031C41;
+}
+
+/* ============================================
+   ЛЕВАЯ И ПРАВАЯ КОЛОНКИ
+   ============================================ */
+.crypto_left,
+.crypto_right {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  z-index: 2;
+}
+
+.crypto_coin {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.crypto_price {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  color: white;
+  min-width: 100px;
+  text-align: right;
+}
+
+.crypto_coin--right .crypto_price {
+  text-align: left;
+}
+
+.crypto_name {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 100px;
+}
+
+.crypto_icon {
+  width: 41px;
+  height: 41px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ============================================
+   ЦЕНТР — КРУГИ
+   ============================================ */
+.crypto_center {
+  position: relative;
+  width: 764px;
+  height: 764px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.crypto_circle_outer {
+  position: absolute;
+  width: 764px;
+  height: 764px;
+  object-fit: contain;
+}
+
+.crypto_circle_middle {
+  position: absolute;
+  width: 672px;
+  height: 672px;
+  object-fit: contain;
+}
+
+.crypto_circle_inner {
+  position: absolute;
+  width: 594px;
+  height: 594px;
+  object-fit: contain;
+}
+
+.crypto_center_content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.crypto_center_title {
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.crypto_add_btn {
+  padding: 10px 40px;
+  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: rgba(39, 0, 91, 1);
+  font-family: 'Bruno Ace', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+}
+
+.crypto_add_btn:hover {
+  background: rgba(240, 240, 255, 1);
+}
+
+/* =============================================
+   KAIROS — Mobile Adaptive ONLY @768px
+   ============================================= */

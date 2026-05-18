@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "typescript-config/is-valid": "off",
+    "button-type": "off",
+    "axe/name-role-value": [
+      "default",
+      {
+        "button-name": "off"
+      }
+    ]
+  },
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not and_ff <= 148",
+    "not firefox <= 149"
+  ]
+}

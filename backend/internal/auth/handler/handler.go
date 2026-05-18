@@ -23,15 +23,16 @@ func NewAuthHandler(service *service.AuthService, cfg *config.Config) *AuthHandl
     }
 }
 
-func (h *AuthHandler) GoogleLogin (ctx *gin.Context) {
+func (h *AuthHandler) GoogleLogin(ctx *gin.Context) {
+	redirect := ctx.Query("redirect")
 	url, state, err := h.service.GetAuthURL()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error" : "failed to generate url",})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate url"})
 		return
 	}
-	 ctx.SetCookie("oauth_state", state, 300, "/", "", false, true)
-	 ctx.Redirect(http.StatusTemporaryRedirect, url)
-
+	ctx.SetCookie("oauth_state", state, http.StatusMultipleChoices, "/", "", false, true)
+	ctx.SetCookie("oauth_redirect", redirect, http.StatusMultipleChoices, "/", "", false, true)
+	ctx.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 func (h *AuthHandler) GoogleCallback(ctx *gin.Context) {
@@ -59,11 +60,17 @@ func (h *AuthHandler) GoogleCallback(ctx *gin.Context) {
 		return
 	}
 
+redirectURL := h.cfg.FrontendURL
+	if cookieRedirect, err := ctx.Cookie("oauth_redirect"); err == nil && cookieRedirect != "" {
+		redirectURL = cookieRedirect
+	}
+	ctx.SetCookie("oauth_redirect", "", -1, "/", "", false, true)
+
 	redirectquery := fmt.Sprintf("%s?name=%s&email=%s&picture=%s",
-    h.cfg.FrontendURL,
-    url.QueryEscape(user.Name),
-    url.QueryEscape(user.Email),
-    url.QueryEscape(user.Picture),
-)
+		redirectURL,
+		url.QueryEscape(user.Name),
+		url.QueryEscape(user.Email),
+		url.QueryEscape(user.Picture),
+	)
 	ctx.Redirect(http.StatusPermanentRedirect, redirectquery)
 }
