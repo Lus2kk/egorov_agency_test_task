@@ -1,0 +1,5 @@
+.env
+.env_server
+.env.*
+deploy/.ssh_password
+deploy/build/

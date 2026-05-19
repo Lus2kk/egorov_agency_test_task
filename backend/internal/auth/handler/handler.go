@@ -3,36 +3,36 @@ package handler
 import (
 	"egorov_agency_test_task/backend/internal/auth/config"
 	"egorov_agency_test_task/backend/internal/auth/service"
-	"fmt"
 	"net/http"
 	"net/url"
 
 	"github.com/gin-gonic/gin"
 )
 
+const oauthCookieMaxAge = 300
 
 type AuthHandler struct {
-    service *service.AuthService
-    cfg     *config.Config
+	service *service.AuthService
+	cfg     *config.Config
 }
 
 func NewAuthHandler(service *service.AuthService, cfg *config.Config) *AuthHandler {
-    return &AuthHandler{
-        service: service,
-        cfg:     cfg,
-    }
+	return &AuthHandler{
+		service: service,
+		cfg:     cfg,
+	}
 }
 
 func (h *AuthHandler) GoogleLogin(ctx *gin.Context) {
 	redirect := ctx.Query("redirect")
-	url, state, err := h.service.GetAuthURL()
+	authURL, state, err := h.service.GetAuthURL()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate url"})
 		return
 	}
-	ctx.SetCookie("oauth_state", state, http.StatusMultipleChoices, "/", "", false, true)
-	ctx.SetCookie("oauth_redirect", redirect, http.StatusMultipleChoices, "/", "", false, true)
-	ctx.Redirect(http.StatusTemporaryRedirect, url)
+	ctx.SetCookie("oauth_state", state, oauthCookieMaxAge, "/", "", false, true)
+	ctx.SetCookie("oauth_redirect", redirect, oauthCookieMaxAge, "/", "", false, true)
+	ctx.Redirect(http.StatusTemporaryRedirect, authURL)
 }
 
 func (h *AuthHandler) GoogleCallback(ctx *gin.Context) {
@@ -60,17 +60,28 @@ func (h *AuthHandler) GoogleCallback(ctx *gin.Context) {
 		return
 	}
 
-redirectURL := h.cfg.FrontendURL
+	redirectTarget := h.cfg.FrontendURL
 	if cookieRedirect, err := ctx.Cookie("oauth_redirect"); err == nil && cookieRedirect != "" {
-		redirectURL = cookieRedirect
+		redirectTarget = cookieRedirect
 	}
+	ctx.SetCookie("oauth_state", "", -1, "/", "", false, true)
 	ctx.SetCookie("oauth_redirect", "", -1, "/", "", false, true)
 
-	redirectquery := fmt.Sprintf("%s?name=%s&email=%s&picture=%s",
-		redirectURL,
-		url.QueryEscape(user.Name),
-		url.QueryEscape(user.Email),
-		url.QueryEscape(user.Picture),
-	)
-	ctx.Redirect(http.StatusPermanentRedirect, redirectquery)
+	parsed, err := url.Parse(redirectTarget)
+	if err != nil || parsed.Scheme == "" || parsed.Host == "" {
+		parsed, err = url.Parse(h.cfg.FrontendURL)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "invalid redirect target"})
+			return
+		}
+	}
+	parsed.Fragment = ""
+
+	q := parsed.Query()
+	q.Set("name", user.Name)
+	q.Set("email", user.Email)
+	q.Set("picture", user.Picture)
+	parsed.RawQuery = q.Encode()
+
+	ctx.Redirect(http.StatusFound, parsed.String())
 }

@@ -32,13 +32,14 @@ var CryptoService = (function () {
   }
 
   function connectWebSocket() {
-    var url = buildWsUrl();
-    if (!url) return;
-
     if (ws) {
       ws.onclose = null;
       ws.close();
+      ws = null;
     }
+
+    var url = buildWsUrl();
+    if (!url) return;
 
     try {
       ws = new WebSocket(url);
@@ -83,6 +84,16 @@ var CryptoService = (function () {
     reconnectTimer = setTimeout(function () {
       connectWebSocket();
     }, 5000);
+  }
+
+  var reconnectQueued = false;
+  function queueReconnect() {
+    if (reconnectQueued) return;
+    reconnectQueued = true;
+    setTimeout(function () {
+      reconnectQueued = false;
+      connectWebSocket();
+    }, 0);
   }
 
   return {
@@ -147,21 +158,15 @@ var CryptoService = (function () {
     },
 
     SUBSCRIBE: function (symbol, callback) {
-      if (!subscriptions[symbol]) {
+      var isNew = !subscriptions[symbol];
+      if (isNew) {
         subscriptions[symbol] = [];
       }
       if (subscriptions[symbol].indexOf(callback) === -1) {
         subscriptions[symbol].push(callback);
       }
-      if (!ws || ws.readyState !== WebSocket.OPEN) {
-        connectWebSocket();
-      } else {
-        var stream = symbol.toLowerCase() + '@miniTicker';
-        try {
-          ws.send(JSON.stringify({ method: 'SUBSCRIBE', params: [stream], id: Date.now() }));
-        } catch (e) {
-          connectWebSocket();
-        }
+      if (isNew) {
+        queueReconnect();
       }
     },
 
@@ -173,12 +178,7 @@ var CryptoService = (function () {
         }
         if (!callback || subscriptions[symbol].length === 0) {
           delete subscriptions[symbol];
-          var stream = symbol.toLowerCase() + '@miniTicker';
-          if (ws && ws.readyState === WebSocket.OPEN) {
-            try {
-              ws.send(JSON.stringify({ method: 'UNSUBSCRIBE', params: [stream], id: Date.now() }));
-            } catch (e) {}
-          }
+          queueReconnect();
         }
       }
     },

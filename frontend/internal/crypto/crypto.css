@@ -187,35 +187,6 @@
   font-size: 14px;
 }
 
-.crypto_coin--dynamic {
-  position: relative;
-}
-
-.crypto_coin_delete {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: rgba(220, 38, 38, 0.9);
-  border: none;
-  color: white;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  z-index: 10;
-  transition: background 0.2s;
-}
-
-.crypto_coin_delete:hover {
-  background: rgba(220, 38, 38, 1);
-}
-
 @media (max-width: 768px) {
   .crypto_modal {
     width: 95%;

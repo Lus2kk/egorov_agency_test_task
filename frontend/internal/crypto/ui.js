@@ -7,11 +7,30 @@ var CryptoUI = (function () {
   var updateCallback = null;
 
   function getIconUrl(symbol) {
-    var coin = CryptoService.getSymbolCoin(symbol);
-    if (CryptoConfig.EXISTING_COINS[symbol]) {
-      return CryptoConfig.EXISTING_COINS[symbol].icon;
-    }
+    var coin = CryptoService.getSymbolCoin(symbol) || symbol;
     return CryptoConfig.ICONS_CDN + coin.toLowerCase() + '.png';
+  }
+
+  function getExistingCoins() {
+    var set = {};
+    var section = document.querySelector('.crypto_section');
+    if (!section) return set;
+    section.querySelectorAll('[data-crypto-symbol]').forEach(function (el) {
+      var s = el.getAttribute('data-crypto-symbol');
+      if (!s) return;
+      var nameEl = el.querySelector('.crypto_name');
+      var pair = s + 'USDT';
+      if (!set[pair]) {
+        set[pair] = { name: nameEl ? nameEl.textContent.trim() : s };
+      }
+    });
+    section.querySelectorAll('[data-symbol]').forEach(function (el) {
+      var s = el.getAttribute('data-symbol');
+      if (!s || set[s]) return;
+      var nameEl = el.querySelector('.crypto_name');
+      set[s] = { name: nameEl ? nameEl.textContent.trim() : s };
+    });
+    return set;
   }
 
   function formatChange(changePercent) {
@@ -73,11 +92,12 @@ var CryptoUI = (function () {
 
   function renderCoinItem(coin) {
     var symbol = coin.symbol;
-    var existingClass = CryptoConfig.EXISTING_COINS[symbol] ? ' crypto_coin_item--existing' : '';
+    var existingCoins = getExistingCoins();
+    var existingClass = existingCoins[symbol] ? ' crypto_coin_item--existing' : '';
     var addedClass = addedCoins[symbol] ? ' crypto_coin_item--added' : '';
     var changePercent = coin.priceChangePercent || '0';
-    var coinName = CryptoConfig.EXISTING_COINS[symbol]
-      ? CryptoConfig.EXISTING_COINS[symbol].name
+    var coinName = existingCoins[symbol]
+      ? existingCoins[symbol].name
       : CryptoService.formatSymbolName(symbol);
 
     var item = document.createElement('div');
@@ -156,7 +176,7 @@ var CryptoUI = (function () {
     },
 
     addCoinToPage: function (symbol, name, initialPrice) {
-      if (CryptoConfig.EXISTING_COINS[symbol] || addedCoins[symbol]) {
+      if (getExistingCoins()[symbol] || addedCoins[symbol]) {
         CryptoUI.closeModal();
         return;
       }
@@ -170,7 +190,6 @@ var CryptoUI = (function () {
       coin.id = 'dynamic_' + symbol;
 
       coin.innerHTML =
-        '<button class="crypto_coin_delete" title="Remove">&times;</button>' +
         '<img src="' + getIconUrl(symbol) + '" alt="' + name + '" class="crypto_icon" onerror="this.style.display=\'none\'">' +
         '<span class="crypto_name">' + name + '</span>' +
         '<span class="crypto_price" id="price_' + symbol + '">' + CryptoService.formatPrice(initialPrice) + '</span>';
@@ -182,12 +201,6 @@ var CryptoUI = (function () {
         section.appendChild(coin);
       }
 
-      var deleteBtn = coin.querySelector('.crypto_coin_delete');
-      deleteBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        CryptoUI.removeCoinFromPage(symbol);
-      });
-
       addedCoins[symbol] = { name: name, price: initialPrice };
 
       CryptoService.SUBSCRIBE(symbol, function (data) {
@@ -195,13 +208,6 @@ var CryptoUI = (function () {
       });
 
       CryptoUI.closeModal();
-    },
-
-    removeCoinFromPage: function (symbol) {
-      var el = document.getElementById('dynamic_' + symbol);
-      if (el) el.remove();
-      delete addedCoins[symbol];
-      CryptoService.DELETE(symbol);
     },
 
     updatePrice: function (symbol, price, openPrice) {
@@ -222,14 +228,12 @@ var CryptoUI = (function () {
     },
 
     updateExistingPrices: function () {
-      var existingSymbols = Object.keys(CryptoConfig.EXISTING_COINS);
+      var existingCoins = getExistingCoins();
+      var existingSymbols = Object.keys(existingCoins);
       for (var i = 0; i < existingSymbols.length; i++) {
         (function (sym) {
           CryptoService.GET_PRICE(sym, function (data, err) {
             if (err || !data) return;
-            var coin = CryptoConfig.EXISTING_COINS[sym];
-            if (!coin) return;
-
             var priceEls = document.querySelectorAll('.crypto_coin[data-symbol="' + sym + '"] .crypto_price');
             for (var j = 0; j < priceEls.length; j++) {
               priceEls[j].textContent = CryptoService.formatPrice(data.lastPrice);
@@ -240,7 +244,7 @@ var CryptoUI = (function () {
     },
 
     subscribeExistingCoins: function () {
-      var symbols = Object.keys(CryptoConfig.EXISTING_COINS);
+      var symbols = Object.keys(getExistingCoins());
       for (var i = 0; i < symbols.length; i++) {
         (function (sym) {
           CryptoService.SUBSCRIBE(sym, function (data) {

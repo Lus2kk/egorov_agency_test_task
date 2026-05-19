@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/src/style.css">
     <link rel="stylesheet" href="/styles/adaptive_mobile.css">
     <link rel="stylesheet" href="/styles/menu.css">
+    <link rel="stylesheet" href="/internal/crypto/crypto.css">
     <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KAIROS</title>
@@ -129,31 +130,31 @@
     <div class="crypto_coin" data-crypto-symbol="BTC">
       <span class="crypto_price">$87,965.62</span>
       <span class="crypto_name">Bitcoin</span>
-      <img src="/images/bitcoin.png" alt="Bitcoin" class="crypto_icon">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png" alt="Bitcoin" class="crypto_icon" onerror="this.style.display='none'">
     </div>
 
     <div class="crypto_coin" data-crypto-symbol="ETH">
       <span class="crypto_price">$2,950.04</span>
       <span class="crypto_name">Ethereum</span>
-      <img src="/images/Etherium.png" alt="Ethereum" class="crypto_icon">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png" alt="Ethereum" class="crypto_icon" onerror="this.style.display='none'">
     </div>
 
     <div class="crypto_coin" data-crypto-symbol="SOL">
       <span class="crypto_price">$124.53</span>
       <span class="crypto_name">Solana</span>
-      <img src="/images/Solana.png" alt="Solana" class="crypto_icon">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sol.png" alt="Solana" class="crypto_icon" onerror="this.style.display='none'">
     </div>
 
     <div class="crypto_coin" data-crypto-symbol="XRP">
       <span class="crypto_price">$1.862</span>
       <span class="crypto_name">XRP</span>
-      <img src="/images/X.png" alt="XRP" class="crypto_icon">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/xrp.png" alt="XRP" class="crypto_icon" onerror="this.style.display='none'">
     </div>
 
     <div class="crypto_coin" data-crypto-symbol="USDC">
       <span class="crypto_price">$0.9997</span>
       <span class="crypto_name">USD Coin</span>
-      <img src="/images/USD.png" alt="USD Coin" class="crypto_icon">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdc.png" alt="USD Coin" class="crypto_icon" onerror="this.style.display='none'">
     </div>
 
   </div>
@@ -172,68 +173,35 @@
  
   <div class="crypto_right">
 
-    <div class="crypto_coin crypto_coin--right" data-symbol="BNBUSDT">
-      <img src="/images/Binance.png" alt="Binance Coin" class="crypto_icon">
+    <div class="crypto_coin crypto_coin--right" data-crypto-symbol="BNB">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/bnb.png" alt="Binance Coin" class="crypto_icon" onerror="this.style.display='none'">
       <span class="crypto_name">Binance Coin</span>
       <span class="crypto_price">$844.91</span>
-    </div>
-
-<div class="crypto_coin crypto_coin--right" data-crypto-symbol="BNB">
-      <img src="/images/Binance.png" alt="Binance Coin" class="crypto_icon">
-      <span class="crypto_name">Binance Coin</span>
-      <span class="crypto_price">$844.91</span>
-    </div>
-
-    <div class="crypto_coin crypto_coin--right" data-crypto-symbol="MIDNIGHT">
-      <img src="/images/Midnight.png" alt="Midnight" class="crypto_icon">
-      <span class="crypto_name">Midnight</span>
-      <span class="crypto_price">$0.06398</span>
     </div>
 
     <div class="crypto_coin crypto_coin--right" data-crypto-symbol="DOGE">
-      <img src="/images/Dogge.png" alt="Dogecoin" class="crypto_icon">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/doge.png" alt="Dogecoin" class="crypto_icon" onerror="this.style.display='none'">
       <span class="crypto_name">Dogecoin</span>
       <span class="crypto_price">$0.1278</span>
     </div>
 
     <div class="crypto_coin crypto_coin--right" data-crypto-symbol="SUI">
-      <img src="/images/SUI.png" alt="Sui" class="crypto_icon">
+      <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/sui.png" alt="Sui" class="crypto_icon" onerror="this.style.display='none'">
       <span class="crypto_name">Sui</span>
       <span class="crypto_price">$1.427</span>
-    </div>
-
-    <div class="crypto_coin crypto_coin--right" data-crypto-symbol="USDT">
-      <img src="/images/Tetter.png" alt="Tether" class="crypto_icon">
-      <span class="crypto_name">Tether</span>
-      <span class="crypto_price">$1.000</span>
-    </div>
-
-    <div class="crypto_coin crypto_coin--right" data-symbol="DOGEUSDT">
-      <img src="/images/Dogge.png" alt="Dogecoin" class="crypto_icon">
-      <span class="crypto_name">Dogecoin</span>
-      <span class="crypto_price">$0.1278</span>
-    </div>
-
-    <div class="crypto_coin crypto_coin--right" data-symbol="SUIUSDT">
-      <img src="/images/SUI.png" alt="Sui" class="crypto_icon">
-      <span class="crypto_name">Sui</span>
-      <span class="crypto_price">$1.427</span>
-    </div>
-
-    <div class="crypto_coin crypto_coin--right">
-      <img src="/images/Tetter.png" alt="Tether" class="crypto_icon">
-      <span class="crypto_name">Tether</span>
-      <span class="crypto_price">$1.000</span>
     </div>
 
   </div>
 
 </section>
 
+    <script src="/internal/crypto/config.js"></script>
+    <script src="/internal/crypto/service.js"></script>
+    <script src="/internal/crypto/ui.js"></script>
+    <script src="/internal/crypto/main.js"></script>
     <script type="module" src="/internal/auth/auth.js"></script>
     <script type="module" src="/internal/menu/menu.js"></script>
     <script type="module" src="/internal/video/video.js"></script>
     <script type="module" src="/internal/crypto/crypto.js"></script>
-    
   </body>
 </html>

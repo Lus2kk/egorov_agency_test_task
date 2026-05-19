@@ -1,4 +1,6 @@
-var BACKEND_URL = (location.port === '5173') ? 'http://localhost:8060' : '';
+var BACKEND_URL = (window.location.hostname === 'localhost' && window.location.port === '5173')
+  ? 'http://localhost:8060'
+  : '';
 
 var user = null;
 
@@ -20,16 +22,41 @@ var clearUser = function () {
   localStorage.removeItem('account_created');
 };
 
+var readAuthParams = function () {
+  var search = window.location.search;
+  var hash = window.location.hash;
+  var hashQuery = '';
+  if (hash) {
+    var qIdx = hash.indexOf('?');
+    if (qIdx !== -1) hashQuery = hash.slice(qIdx + 1);
+    else if (hash.indexOf('=') !== -1) hashQuery = hash.slice(1);
+  }
+  var combined = (search ? search.replace(/^\?/, '') : '') +
+    (hashQuery ? '&' + hashQuery : '');
+  return new URLSearchParams(combined);
+};
+
 var parseCallbackParams = function () {
-  var params = new URLSearchParams(window.location.search);
+  var params = readAuthParams();
   var name = params.get('name');
   var email = params.get('email');
   var picture = params.get('picture');
 
   if (name && email) {
-    saveUser(decodeURIComponent(name), decodeURIComponent(email), picture ? decodeURIComponent(picture) : '');
+    saveUser(name, email, picture || '');
     window.history.replaceState({}, document.title, window.location.pathname);
   }
+};
+
+var getCleanReturnURL = function () {
+  return window.location.origin + window.location.pathname;
+};
+
+var buildAvatarHtml = function (size) {
+  if (!user || !user.picture) return '';
+  return '<img src="' + user.picture + '" alt="avatar" referrerpolicy="no-referrer" ' +
+    'onerror="this.style.display=\'none\'" ' +
+    'style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;object-fit:cover;">';
 };
 
 var updateDrawer = function () {
@@ -45,10 +72,7 @@ var updateDrawer = function () {
   li.className = 'drawer_user_info';
   li.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px 0 10px;border-top:1px solid rgba(255,255,255,0.2);margin-top:8px;';
 
-  var avatarHtml = '';
-  if (user.picture) {
-    avatarHtml = '<img src="' + user.picture + '" alt="avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">';
-  }
+  var avatarHtml = buildAvatarHtml(48);
 
   var accountStatus = '';
   if (localStorage.getItem('account_created') === 'true') {
@@ -71,10 +95,7 @@ var showAuthenticatedState = function () {
   var authFrame = document.querySelector('.auth_frame');
   if (!authFrame) return;
 
-  var avatarHtml = '';
-  if (user.picture) {
-    avatarHtml = '<img src="' + user.picture + '" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">';
-  }
+  var avatarHtml = buildAvatarHtml(32);
 
   var authBody = authFrame.querySelector('.auth_card_body');
   var googleFrame = authBody.querySelector('.google_button_frame');
@@ -159,19 +180,19 @@ var initAuthUI = function () {
   if (googleBtn) {
     googleBtn.style.cursor = 'pointer';
     googleBtn.addEventListener('click', function () {
-      window.location.href = BACKEND_URL + '/auth/google?redirect=' + encodeURIComponent(window.location.href);
+      window.location.href = BACKEND_URL + '/auth/google?redirect=' + encodeURIComponent(getCleanReturnURL());
     });
   }
 
   if (signInBtn) {
     signInBtn.addEventListener('click', function () {
-      window.location.href = BACKEND_URL + '/auth/google?redirect=' + encodeURIComponent(window.location.href);
+      window.location.href = BACKEND_URL + '/auth/google?redirect=' + encodeURIComponent(getCleanReturnURL());
     });
   }
 
   if (emailBtn) {
     emailBtn.addEventListener('click', function () {
-      window.location.href = BACKEND_URL + '/auth/google?redirect=' + encodeURIComponent(window.location.href);
+      window.location.href = BACKEND_URL + '/auth/google?redirect=' + encodeURIComponent(getCleanReturnURL());
     });
   }
 

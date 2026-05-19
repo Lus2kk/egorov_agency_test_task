@@ -4,8 +4,9 @@
   padding: 0;
 }
 
-body {
+html, body {
   overflow-x: hidden;
+  background: #031C41;
 }
 
 .header {
@@ -340,9 +341,6 @@ border-radius: 10px 10px 0px 0px;
   cursor: pointer;
 }
 
-/* ============================================
-   CRYPTO SECTION
-   ============================================ */
 .crypto_section {
   position: relative;
   width: 100%;
@@ -354,9 +352,6 @@ border-radius: 10px 10px 0px 0px;
   background: #031C41;
 }
 
-/* ============================================
-   ЛЕВАЯ И ПРАВАЯ КОЛОНКИ
-   ============================================ */
 .crypto_left,
 .crypto_right {
   display: flex;
@@ -397,9 +392,7 @@ border-radius: 10px 10px 0px 0px;
   object-fit: cover;
 }
 
-/* ============================================
-   ЦЕНТР — КРУГИ
-   ============================================ */
+
 .crypto_center {
   position: relative;
   width: 764px;
@@ -466,7 +459,3 @@ border-radius: 10px 10px 0px 0px;
 .crypto_add_btn:hover {
   background: rgba(240, 240, 255, 1);
 }
-
-/* =============================================
-   KAIROS — Mobile Adaptive ONLY @768px
-   ============================================= */
