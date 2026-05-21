@@ -1,6 +1,6 @@
 # KAIROS — Online Banking & Crypto Dashboard
 
-Проект представляет из себя лендинг с авторизацией через Google OAuth и реалтайм-дашбордом криптовалют. Цены обновляются через WebSocket ( каждые 3 секунды). Реализованы GET и DELETE ручки для работы с CoinDesk Data Streamer API.
+Проект представляет из себя лендинг с авторизацией через Google OAuth и реалтайм-дашбордом криптовалют. Цены обновляются через Binance WebSocket API в реальном времени. Реализованы GET и DELETE ручки для работы с Binance API на фронтенде.
 
 **Тестовый сервер:** [https://testtaskegorovagency.duckdns.org](https://testtaskegorovagency.duckdns.org)
 
@@ -8,20 +8,40 @@
 
 ## Стек
 
-- **Backend:** Go 1.25, Gin, Gorilla WebSocket
+- **Backend:** Go 1.25, Gin
 - **Frontend:** Vanilla JS, Vite, CSS
 - **Инфраструктура:** Docker, Nginx
+- **Крипто-API:** Binance REST API (`api.binance.com/api/v3`), Binance WebSocket (`stream.binance.com:9443`)
 
 ---
 
-## API Endpoints
+## Интеграция с Binance API
+
+Фронтенд напрямую работает с двумя эндпоинтами Binance:
+
+**REST API (GET):**
+- `GET https://api.binance.com/api/v3/ticker/24hr` — получение списка всех криптовалют с ценами, объёмами и изменениями за 24 часа
+- `GET https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT` — получение цены конкретной пары
+
+**WebSocket (реалтайм):**
+- `wss://stream.binance.com:9443/stream?streams=<symbol>@miniTicker` — подписка на мини-тикер для получения обновлений цен в реальном времени
+
+**Управление подписками (DELETE):**
+- Удаление подписки на символ — `CryptoService.DELETE(symbol)` — отписывается от WebSocket-стрима для указанной пары и пересоединяется без неё
+
+**Файловая структура фронтенд-модуля:**
+- `config.js` — конфигурация (URL-адреса Binance REST/WebSocket, CDN иконок)
+- `service.js` — `CryptoService` — работа с Binance REST и WebSocket (GET, GET_PRICE, SUBSCRIBE, UNSUBSCRIBE, DELETE)
+- `ui.js` — `CryptoUI` — модальное окно поиска/добавления монет, обновление цен на странице
+- `main.js` — `CryptoMain` — инициализация модуля
+- `crypto.js` — подписка на HTML-элементы с `data-crypto-symbol`, обновление цен
+
+---
+
+## API Endpoints (Backend)
 
 | Метод | Endpoint | Описание |
 |-------|----------|----------|
-| GET | `/crypto/prices?symbols=BTC,ETH,...` | Получить текущие цены криптовалют |
-| GET | `/crypto/subscriptions` | Список подписок Data Streamer (требует API ключ) |
-| DELETE | `/crypto/subscriptions/:id` | Удалить подписку Data Streamer (требует API ключ) |
-| GET | `/crypto/ws?symbols=BTC,ETH,...` | WebSocket для реалтайм обновления цен |
 | GET | `/auth/google` | Авторизация через Google |
 | GET | `/auth/callback` | Callback Google OAuth |
 
@@ -107,16 +127,12 @@ nano .env
 ```env
 SERVER_ADDRESS=0.0.0.0:8060
 
-GOOGLE_CLIENT_ID=<ваш-client-id>
-GOOGLE_CLIENT_SECRET=<ващ-client-secret>
-GOOGLE_REDIRECT_URL=http://<т-домен>/auth/callback
+GOOGLE_CLIENT_ID=<твой-client-id>
+GOOGLE_CLIENT_SECRET=<твой-client-secret>
+GOOGLE_REDIRECT_URL=http://<твой-домен>/auth/callback
 GOOGLE_USER_INFO_URL=https://www.googleapis.com/oauth2/v2/userinfo
 
 FRONTEND_URL=http://<твой-домен>/#
-
-COINDESK_API_KEY=<твой-ключ-или-пусто>
-COINDESK_DATA_API_URL=https://data-api.coindesk.com
-COINDESK_MIN_API_URL=https://min-api.cryptocompare.com
 ```
 
 > **Важно:** `SERVER_ADDRESS` должен быть `0.0.0.0:8060`, не `localhost:8060`.
@@ -157,11 +173,8 @@ docker compose up -d --build
 | `GOOGLE_REDIRECT_URL` | Redirect URI для Google OAuth | `http://example.com/auth/callback` |
 | `GOOGLE_USER_INFO_URL` | URL для получения инфо о пользователе | `https://www.googleapis.com/oauth2/v2/userinfo` |
 | `FRONTEND_URL` | URL фронтенда для редиректа после авторизации | `http://example.com/#` |
-| `COINDESK_API_KEY` | API ключ CoinDesk (опционально) | `xxx` |
-| `COINDESK_DATA_API_URL` | URL CoinDesk Data API | `https://data-api.coindesk.com` |
-| `COINDESK_MIN_API_URL` | URL CryptoCompare API для цен | `https://min-api.cryptocompare.com` |
 
-> `COINDESK_API_KEY` нужен только для операций с Data Streamer подписками (GET/DELETE `/crypto/subscriptions`). Цены криптовалют работают без ключа.
+> Для криптовалют API ключ не нужен — Binance REST и WebSocket API доступны без авторизации.
 
 ---
 
@@ -171,8 +184,10 @@ docker compose up -d --build
 Браузер → Nginx (:80) → Frontend (статика)
                         → Backend (:8060)
                             → /auth/*        — Google OAuth
-                            → /crypto/*      — REST API
-                            → /crypto/ws     — WebSocket
+
+Браузер ← прямое соединение → Binance API
+                            → api.binance.com/api/v3        — REST (цены, тикеры)
+                            → stream.binance.com:9443/stream — WebSocket (реалтайм)
 ```
 
-Nginx раздаёт статику фронтенда и проксирует API-запросы и WebSocket на Go-бэкенд. Бэкенд ходит во внешние API (CoinDesk, CryptoCompare, Google) и возвращает данные клиенту.
+Nginx раздаёт статику фронтенда и проксирует auth-запросы на Go-бэкенд. Крипто-модуль на фронтенде напрямую подключается к Binance REST и WebSocket API.
