@@ -1,4 +1,4 @@
-module egorov_agency_test_task
+	module egorov_agency_test_task
 
 go 1.25.0
 
